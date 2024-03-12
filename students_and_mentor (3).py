@@ -1,50 +1,74 @@
-class Lector:
-    def __init__(self, name, surname, avg_rating):
-        self.name = name
-        self.surname = surname
-        self.avg_rating = avg_rating
+class Person:
+    def __init__(self, first_name, last_name):
+        self.first_name = first_name
+        self.last_name = last_name
 
     def __str__(self):
-        return f"Имя: {self.name}\nФамилия: {self.surname}\nСредняя оценка за лекции: {self.avg_rating}"
+        return f"Имя: {self.first_name}\nФамилия: {self.last_name}"
 
-    def __gt__(self, other):
-        return self.avg_rating > other.avg_rating
+    def __eq__(self, other):
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
 
     def __lt__(self, other):
-        return self.avg_rating < other.avg_rating
+        return (self.first_name, self.last_name) < (other.first_name, other.last_name)
 
-class Student:
-    def __init__(self, name, surname, avg_hw_rating, courses_in_progress, completed_courses):
-        self.name = name
-        self.surname = surname
-        self.avg_hw_rating = avg_hw_rating
-        self.courses_in_progress = courses_in_progress
-        self.completed_courses = completed_courses
+    def __le__(self, other):
+        return (self.first_name, self.last_name) <= (other.first_name, other.last_name)
+
+    def __gt__(self, other):
+        return (self.first_name, self.last_name) > (other.first_name, other.last_name)
+
+    def __ge__(self, other):
+        return (self.first_name, self.last_name) >= (other.first_name, other.last_name)
+
+
+class Reviewer(Person):
+    def __str__(self):
+        return super().__str__()
+
+
+class Lecturer(Person):
+    def __init__(self, first_name, last_name):
+        super().__init__(first_name, last_name)
+        self.average_grade = 0
 
     def __str__(self):
-        return f"Имя: {self.name}\nФамилия: {self.surname}\nСредняя оценка за домашние задания: {self.avg_hw_rating}\nКурсы в процессе изучения: {', '.join(self.courses_in_progress)}\nЗавершенные курсы: {', '.join(self.completed_courses)}"
+        return f"{super().__str__()}\nСредняя оценка за лекции: {self.average_grade}"
 
-    def __gt__(self, other):
-        return self.avg_hw_rating > other.avg_hw_rating
 
-    def __lt__(self, other):
-        return self.avg_hw_rating < other.avg_hw_rating
+class Student(Person):
+    def __init__(self, first_name, last_name):
+        super().__init__(first_name, last_name)
+        self.average_grade = 0
+        self.courses_in_progress = []
+        self.completed_courses = []
+
+    def __str__(self):
+        return f"{super().__str__()}\nСредняя оценка за домашние задания: {self.average_grade}\n" \
+               f"Курсы в процессе изучения: {', '.join(self.courses_in_progress)}\n" \
+               f"Завершенные курсы: {', '.join(self.completed_courses)}"
 
 # Пример использования
-lector1 = Lector("Иван", "Иванов", 9.7)
-lector2 = Lector("Петр", "Петров", 9.9)
+some_reviewer = Reviewer("Some", "Buddy")
+print(some_reviewer)
 
-student1 = Student("Алексей", "Алексеев", 9.5, ["Python", "Git"], ["Введение в программирование"])
-student2 = Student("Сергей", "Сергеев", 9.8, ["JavaScript"], ["ООП в Python"])
+some_lecturer = Lecturer("Some", "Buddy")
+some_lecturer.average_grade = 9.9
+print(some_lecturer)
 
-# Сравнение лекторов по средней оценке за лекции
-if lector1 > lector2:
-    print(f"{lector1.name} {lector1.surname} имеет выше среднюю оценку за лекции, чем {lector2.name} {lector2.surname}")
-else:
-    print(f"{lector2.name} {lector2.surname} имеет выше среднюю оценку за лекции, чем {lector1.name} {lector1.surname}")
+some_student = Student("Ruoy", "Eman")
+some_student.average_grade = 9.9
+some_student.courses_in_progress = ["Python", "Git"]
+some_student.completed_courses = ["Введение в программирование"]
+print(some_student)
 
-# Сравнение студентов по средней оценке за домашние задания
-if student1 > student2:
-    print(f"{student1.name} {student1.surname} имеет выше среднюю оценку за домашние задания, чем {student2.name} {student2.surname}")
-else:
-    print(f"{student2.name} {student2.surname} имеет выше среднюю оценку за домашние задания, чем {student1.name} {student1.surname}")
+# Тестирование методов сравнения
+p1 = Person("John", "Doe")
+p2 = Person("Jane", "Doe")
+print(p1 == p2)  # False
+print(p1 != p2)  # True
+print(p1 < p2)   # True
+print(p1 > p2)   # False
